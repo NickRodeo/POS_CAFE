@@ -24,8 +24,8 @@ input, select{
 </style>
 
 <?php 
-require_once "../module.php";
-$kategori = query_select("SELECT * FROM kategori") ?>
+require_once "../config/database.php";
+$kategori = query_select("SELECT * FROM kategori", []) ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -35,7 +35,8 @@ $kategori = query_select("SELECT * FROM kategori") ?>
 </head>
 <body>
     <h1 style="text-align: center;">Edit Menu</h1>
-    <form action="../process/insert.php" method="POST" style="display: flex; flex-direction: column; gap: 10px;">
+    <form action="../process/update.php" method="POST" style="display: flex; flex-direction: column; gap: 10px;">
+        <input type="hidden" name="id_menu" value=<?= $_GET['id_menu'] ?>>
         <input type="text" name="nama_menu" placeholder="Masukkan Nama Menu...">
         <input type="number" name="harga" placeholder="Masukkan Harga">
         <input type="number" name="jumlah_stok" placeholder="Masukkan Jumlah Stok">

@@ -24,8 +24,8 @@ input, select{
 </style>
 
 <?php 
-require_once "../module.php";
-$kategori = query_select("SELECT * FROM kategori") ?>
+require_once "../config/database.php";
+$kategori = query_select("SELECT * FROM kategori", []) ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

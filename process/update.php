@@ -1,18 +1,17 @@
 <?php 
 require_once '../config/database.php'; 
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header("Location: ../public/index.php");
+    exit;
+}
+
 try { 
-$stmt = $conn->prepare( 
-"UPDATE buku 
-SET buku_judul = :judul, buku_harga = :harga 
-WHERE buku_isbn = :isbn" 
-); 
-$stmt->execute([ 
-':judul' => $_POST['judul'], 
-':harga' => $_POST['harga'], 
-':isbn'  => $_POST['isbn'] 
-]); 
-header("Location: ../public/index.php?status=updated"); 
+    $data = $_POST;
+    unset($data['id_menu']);
+    query_update("UPDATE menu", $data, "WHERE id_menu = {$_POST['id_menu']}");
+    header("Location: ../public/index.php?status=updated"); 
 } catch (PDOException $e) { 
-echo "Gagal update data: " . $e->getMessage(); 
+    echo "Gagal update data: " . $e->getMessage(); 
 }
 ?>

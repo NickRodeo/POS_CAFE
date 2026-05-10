@@ -36,10 +36,8 @@ a{
 
 <?php 
 require_once '../config/database.php'; 
-require_once '../module.php';
-$data = query_select("SELECT * FROM menu");
+$data = query_select("SELECT * FROM menu", []);
 $keranjang = [];
-// query_insert("INSERT INTO menu", ["nama_menu" => "Ayam", "harga" => 10000, "jumlah_stok" => 10, "id_kategori" => 2]);
 ?> 
 <h1 style="text-align: center;">SISTEM POS CAFE</h1>
 <div class="container">
@@ -49,7 +47,7 @@ $keranjang = [];
                 <h2 style="text-align:center;background-color: white;"><?= $row['nama_menu'] ?></h2>
                 <img src="./kucgg.jfif" alt="">
                 <div style="display: flex; justify-content: space-between; margin: 7px 0px 10px 0px;">
-                    <span style="background-color:green; padding: 5px 15px 5px 15px; border-radius: 15px; color:white;"><?= query_select_param("SELECT * FROM kategori", ["id_kategori" => $row['id_kategori']])['nama_kategori'] ?></span>
+                    <span style="background-color:green; padding: 5px 15px 5px 15px; border-radius: 15px; color:white;"><?= query_select("SELECT * FROM kategori WHERE id_kategori = :id_kategori", [":id_kategori" => $row['id_kategori']])[0]['nama_kategori'] ?></span>
                     <span style="background-color:green; padding: 5px 10px 5px 10px; border-radius: 100px; color:white;"><?= $row['jumlah_stok'] ?></span>
                 </div>
                 <div style="display: flex; justify-content: space-between;">
