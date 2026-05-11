@@ -1,55 +1,272 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Edit Menu</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Poppins',sans-serif;
+    }
+
+    body{
+      background:#eef2ff;
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:30px;
+    }
+
+    .container{
+      width:750px;
+      background:white;
+      border-radius:30px;
+      padding:35px;
+      box-shadow:0 20px 40px rgba(0,0,0,0.08);
+    }
+
+    .header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:30px;
+    }
+
+    .header h1{
+      font-size:34px;
+      color:#111827;
+    }
+
+    .badge{
+      background:#dbeafe;
+      color:#2563eb;
+      padding:10px 18px;
+      border-radius:14px;
+      font-weight:600;
+    }
+
+    .badge.inactive{
+        background:#fee2e2;
+        color:#dc2626;
+    }
+
+    .menu-preview{
+      display:flex;
+      gap:20px;
+      align-items:center;
+      background:#f9fafb;
+      padding:20px;
+      border-radius:20px;
+      margin-bottom:30px;
+    }
+
+    .menu-preview img{
+      width:120px;
+      height:120px;
+      object-fit:contain;
+      background:white;
+      border-radius:20px;
+      padding:15px;
+    }
+
+    .menu-info h3{
+      font-size:24px;
+      margin-bottom:10px;
+    }
+
+    .menu-info p{
+      color:#777;
+    }
+
+    .form-group{
+      margin-bottom:22px;
+    }
+
+    .form-group label{
+      display:block;
+      margin-bottom:10px;
+      font-weight:600;
+    }
+
+    .form-group input,
+    .form-group select{
+      width:100%;
+      padding:16px;
+      border-radius:16px;
+      border:1px solid #d1d5db;
+      outline:none;
+      font-size:15px;
+    }
+
+    .btn-group{
+      display:flex;
+      gap:15px;
+      margin-top:30px;
+    }
+
+    .update-btn,
+    .cancel-btn{
+      flex:1;
+      border:none;
+      padding:18px;
+      border-radius:18px;
+      font-size:16px;
+      font-weight:600;
+      cursor:pointer;
+    }
+
+    .update-btn{
+      background:#2563eb;
+      color:white;
+    }
+
+    .cancel-btn{
+      background:#e5e7eb;
+    }
+
+  </style>
+</head>
+
 <?php 
 
+require_once "../config/database.php";
+
+$menu = query_select(
+    "SELECT * FROM menu WHERE id_menu = :id_menu",
+    [":id_menu" => $_GET["id_menu"]]
+)[0];
+
+$kategori = query_select("SELECT * FROM kategori", []);
 
 ?>
 
-<style>
-.btn{
-    padding: 10px;
-    margin-top: 10px;
-    display: inline-block;
-    width: auto;
-    text-align: center;
-    border: 2px solid black;
-    border-radius: 10px;
-}
-a{
-    text-decoration: none;
-    color: black;
-}
-input, select{
-    border-radius: 10px;
-    padding: 10px 5px 10px 5px;
-}
-</style>
-
-<?php 
-require_once "../config/database.php";
-$kategori = query_select("SELECT * FROM kategori", []) ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit</title>
-</head>
 <body>
-    <h1 style="text-align: center;">Edit Menu</h1>
-    <form action="../process/update.php" method="POST" style="display: flex; flex-direction: column; gap: 10px;">
-        <input type="hidden" name="id_menu" value=<?= $_GET['id_menu'] ?>>
-        <input type="text" name="nama_menu" placeholder="Masukkan Nama Menu...">
-        <input type="number" name="harga" placeholder="Masukkan Harga">
-        <input type="number" name="jumlah_stok" placeholder="Masukkan Jumlah Stok">
-        <select name="id_kategori" id="kategori">
-            <?php foreach($kategori as $k): ?>
-                <option value=<?= $k['id_kategori'] ?>><?= $k['nama_kategori'] ?></option>
-            <?php endforeach; ?>
+
+  <div class="container">
+
+    <div class="header">
+
+      <h1>Edit Menu</h1>
+
+      <div class="badge <?= $menu['jumlah_stok'] <= 0 ? 'inactive' : '' ?>">
+        <?= $menu['jumlah_stok'] <= 0 ? 'Inactive Menu' : 'Active Menu' ?>
+      </div>
+
+    </div>
+
+    <div class="menu-preview">
+
+      <img src="https://cdn-icons-png.flaticon.com/512/924/924514.png">
+
+      <div class="menu-info">
+
+        <h3><?= $menu['nama_menu'] ?></h3>
+
+      </div>
+
+    </div>
+
+    <form action="../process/update.php" method="POST">
+
+      <input 
+        type="hidden" 
+        name="id_menu" 
+        value="<?= $menu['id_menu'] ?>"
+      >
+
+      <div class="form-group">
+        <label>Nama Menu</label>
+
+        <input 
+          name="nama_menu" 
+          type="text" 
+          value="<?= $menu['nama_menu'] ?>"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label>Kategori</label>
+
+        <select name="id_kategori" required>
+
+          <?php foreach($kategori as $k): ?>
+
+            <option 
+              value="<?= $k['id_kategori'] ?>"
+              <?= $menu['id_kategori'] == $k['id_kategori'] ? 'selected' : '' ?>
+            >
+              <?= $k['nama_kategori'] ?>
+            </option>
+
+          <?php endforeach; ?>
+
         </select>
-        <div style="display: flex; justify-content:space-between;">
-            <a href="index.php" class="btn">BALIK</a>
-            <button type="submit" class="btn">TAMBAH</button>
-        </div>
+
+      </div>
+
+      <div class="form-group">
+        <label>Harga</label>
+
+        <input 
+          name="harga"  
+          type="number" 
+          value="<?= $menu['harga'] ?>"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label>Stok</label>
+
+        <input 
+          name="jumlah_stok" 
+          type="number" 
+          value="<?= $menu['jumlah_stok'] ?>"
+          required
+        >
+      </div>
+
+      <div class="btn-group">
+
+        <button type="submit" class="update-btn">
+          Edit Menu
+        </button>
+
+        <button 
+          type="button"
+          onclick="backToHome()" 
+          class="cancel-btn"
+        >
+          Batal
+        </button>
+
+      </div>
+
     </form>
-    
+
+  </div>
+
 </body>
+
+<script>
+
+  function backToHome(){
+    window.location.href = "./index.php";
+  }
+
+</script>
+
 </html>
