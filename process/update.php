@@ -13,18 +13,42 @@ if(isset($_POST['cart'])){
 
     //Validasi Jumlah Stok
     foreach($cart as $item){
+        if(
+            !isset($item['nama']) ||
+            !isset($item['qty']) ||
+            $item['qty'] <= 0
+        ){
+            redirect_with_message(
+                "../public/index.php",
+                "error",
+                "Data cart tidak valid!"
+            );
+        }
 
         $menu = query_select(
             "SELECT * FROM menu WHERE nama_menu = :nama_menu",
             [
                 ':nama_menu' => $item['nama']
             ]
-        )[0];
+        );
+
+        if(count($menu) === 0){
+
+            redirect_with_message(
+                "../public/index.php",
+                "error",
+                "Menu {$item['nama']} tidak ditemukan!"
+            );
+
+        }
+
+        $menu = $menu[0];
 
         if($menu['jumlah_stok'] < $item['qty']){
-            header(
-                "Location: ../public/index.php?error=" . 
-                urlencode("Stock {$item['nama']} tidak cukup!")
+            redirect_with_message(
+                "../public/index.php",
+                "error",
+                "Stock {$item['nama']} tidak cukup!"
             );
             exit;
         }
@@ -32,36 +56,78 @@ if(isset($_POST['cart'])){
     }
 
     //Ubah Stok
-    foreach($cart as $item){
+    try{
 
-        $menu = query_select(
-            "SELECT * FROM menu WHERE nama_menu = :nama_menu",
-            [
-                ':nama_menu' => $item['nama']
-            ]
-        )[0];
+        foreach($cart as $item){
 
-        $stockBaru = $menu['jumlah_stok'] - $item['qty'];
+            $menu = query_select(
+                "SELECT * FROM menu WHERE nama_menu = :nama_menu",
+                [
+                    ':nama_menu' => $item['nama']
+                ]
+            )[0];
 
-        query_update(
-            "UPDATE menu",
-            [
-                'jumlah_stok' => $stockBaru
-            ],
-            "WHERE id_menu = {$menu['id_menu']}"
+            $stockBaru = $menu['jumlah_stok'] - $item['qty'];
+
+            query_update(
+                "UPDATE menu",
+                [
+                    'jumlah_stok' => $stockBaru
+                ],
+                "WHERE id_menu = {$menu['id_menu']}"
+            );
+
+        }
+
+        redirect_with_message(
+            "../public/index.php",
+            "success",
+            "Checkout berhasil!"
+        );
+
+    }catch(PDOException $e){
+
+        redirect_with_message(
+            "../public/index.php",
+            "error",
+            "Checkout gagal!"
         );
 
     }
+}
 
-    header("Location: ../public/index.php?status=checkout");
-    exit;
+$menuLama = query_select(
+    "SELECT * FROM menu WHERE id_menu = :id",
+    [
+        ':id' => $_POST['id_menu']
+    ]
+);
+
+if(count($menuLama) === 0){
+    redirect_with_message(
+        "../public/index.php",
+        "error",
+        "Menu tidak ditemukan!"
+    );
+}
+
+if($_POST['jumlah_stok'] < 0){
+    redirect_with_message(
+        "../public/index.php",
+        "error",
+        "Stock tidak valid!"
+    );
 }
 
 try { 
     $data = $_POST;
     unset($data['id_menu']);
     query_update("UPDATE menu", $data, "WHERE id_menu = {$_POST['id_menu']}");
-    header("Location: ../public/index.php?status=updated"); 
+    redirect_with_message(
+        "../public/index.php",
+        "success",
+        "Menu berhasil diupdate!"
+    );
 } catch (PDOException $e) { 
     echo "Gagal update data: " . $e->getMessage(); 
 }

@@ -403,8 +403,8 @@ $menus = query_select($query, $params);
       animation: rainbowGlow 3s infinite linear;
 
       text-shadow:
-        0 0 24px rgba(255,255,255,0.8),
-        0 0 48px rgba(255,255,255,0.5);
+        0 0 48px rgba(255,255,255,0.8),
+        0 0 96px rgba(255,255,255,0.5);
 
     }
 
@@ -413,49 +413,49 @@ $menus = query_select($query, $params);
       0%{
         color:#ff0080;
         text-shadow:
-          0 0 16px #ff0080,
-          0 0 24px #ff0080,
-          0 0 48px #ff0080;
+          0 0 48px #ff0080,
+          0 0 96px #ff0080,
+          0 0 112px #ff0080;
       }
 
       20%{
         color:#7c3aed;
         text-shadow:
-          0 0 16px #7c3aed,
-          0 0 24px #7c3aed,
-          0 0 48px #7c3aed;
+          0 0 48px #7c3aed,
+          0 0 96px #7c3aed,
+          0 0 112px #7c3aed;
       }
 
       40%{
         color:#2563eb;
         text-shadow:
-          0 0 16px #2563eb,
-          0 0 24px #2563eb,
-          0 0 48px #2563eb;
+          0 0 48px #2563eb,
+          0 0 96px #2563eb,
+          0 0 112px #2563eb;
       }
 
       60%{
         color:#06b6d4;
         text-shadow:
-          0 0 16px #06b6d4,
-          0 0 24px #06b6d4,
-          0 0 48px #06b6d4;
+          0 0 48px #06b6d4,
+          0 0 96px #06b6d4,
+          0 0 112px #06b6d4;
       }
 
       80%{
         color:#22c55e;
         text-shadow:
-          0 0 16px #22c55e,
-          0 0 24px #22c55e,
-          0 0 48px #22c55e;
+          0 0 48px #22c55e,
+          0 0 96px #22c55e,
+          0 0 112px #22c55e;
       }
 
       100%{
         color:#ff0080;
         text-shadow:
-          0 0 16px #ff0080,
-          0 0 24px #ff0080,
-          0 0 48px #ff0080;
+          0 0 48px #ff0080,
+          0 0 96px #ff0080,
+          0 0 112px #ff0080;
       }
 
     }
@@ -565,6 +565,28 @@ $menus = query_select($query, $params);
         fadeOut 0.5s ease 5s forwards;
     }
 
+    .success-alert{
+      position: fixed;
+      top: 25px;
+      right: 25px;
+
+      background: #dcfce7;
+      color: #166534;
+
+      padding: 16px 22px;
+      border-radius: 18px;
+
+      font-weight: 600;
+
+      box-shadow: 0 10px 25px rgba(34,197,94,0.15);
+
+      z-index: 999;
+
+      animation:
+        slideIn 0.3s ease,
+        fadeOut 0.5s ease 5s forwards;
+    }
+
     @keyframes slideIn{
       from{
         opacity: 0;
@@ -646,12 +668,22 @@ $menus = query_select($query, $params);
 </head>
 
 <body>
-  <?php if(isset($_GET['error'])): ?>
+  <?php if(isset($_SESSION['error'])): ?>
 
   <div class="error-alert">
-    <?= $_GET['error'] ?>
+    <?= $_SESSION['error'] ?>
   </div>
 
+  <?php unset($_SESSION['error']); ?>
+  <?php endif; ?>
+
+  <?php if(isset($_SESSION['success'])): ?>
+
+  <div class="success-alert">
+    <?= $_SESSION['success'] ?>
+  </div>
+
+  <?php unset($_SESSION['success']); ?>
   <?php endif; ?>
   <div class="container">
 
