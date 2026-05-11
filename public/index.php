@@ -102,19 +102,24 @@ $menus = query_select($query, $params);
     }
 
     .profile{
-      background: #111 !important;
-      color: white;
-
+      background: #fff7ed !important;
+      color: #9a3412;
+      border: 1px solid #fed7aa;
       display: flex;
       align-items: center;
       gap: 10px;
+      padding: 8px 14px;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
 
     .profile img{
-      width: 34px;
-      height: 34px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
       object-fit: cover;
+      border: 2px solid #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
     }
 
     /* CATEGORY */
@@ -584,31 +589,30 @@ $menus = query_select($query, $params);
     }
 
     /* SEARCH */
+    .search-box{
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
 
-.search-box{
-  display: flex;
-  gap: 12px;
-  margin-bottom: 20px;
-}
+    .search-box input{
+      flex: 1;
+      border: 1px solid #d1d5db;
+      padding: 14px 18px;
+      border-radius: 16px;
+      outline: none;
+      font-size: 15px;
+    }
 
-.search-box input{
-  flex: 1;
-  border: 1px solid #d1d5db;
-  padding: 14px 18px;
-  border-radius: 16px;
-  outline: none;
-  font-size: 15px;
-}
-
-.search-box button{
-  border: none;
-  background: #111827;
-  color: white;
-  padding: 0 22px;
-  border-radius: 16px;
-  cursor: pointer;
-  font-weight: 600;
-}
+    .search-box button{
+      border: none;
+      background: #111827;
+      color: white;
+      padding: 0 22px;
+      border-radius: 16px;
+      cursor: pointer;
+      font-weight: 600;
+    }
 
     /* RESPONSIVE */
 
